@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_main);
 
-        Button button = (Button)findViewById(R.id.button);
+        /*Button button = (Button)findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity
                 releaseWriteLock();
 
             }
-        });
+        });*/
 
         mOpenCvCameraView = (CameraBridgeViewBase)findViewById(R.id.activity_surface_view);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);

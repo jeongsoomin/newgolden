@@ -1,16 +1,13 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="oval">
-            <size android:width="100dp"
-                android:height="100dp"/>
-            <solid android:color="#FFFFFF"/>
+            <size android:width="330dp"
+                android:height="330dp"/>
+            <solid android:color="@color/darkblue"/>
             <padding android:bottom="10dp"
                 android:left="10dp"
                 android:right="10dp"
                 android:top="10dp"/>
-            <stroke
-                android:width="15dp"
-                android:color="@color/darkblue"/>
         </shape>
     </item>
 </selector>
