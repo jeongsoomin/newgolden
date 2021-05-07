@@ -2,17 +2,22 @@ package com.example.newgolden;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +28,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-
+import android.widget.Toast;
 
 
 import org.opencv.android.BaseLoaderCallback;
@@ -37,12 +42,16 @@ import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Semaphore;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -287,6 +296,8 @@ public class MainActivity extends AppCompatActivity
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 200;
 
 
+
+
     protected void onCameraPermissionGranted() {
         List<? extends CameraBridgeViewBase> cameraViews = getCameraViewList();
         if (cameraViews == null) {
@@ -308,8 +319,11 @@ public class MainActivity extends AppCompatActivity
         boolean havePermission = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(CAMERA) != PackageManager.PERMISSION_GRANTED
+                    || checkSelfPermission(ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    || checkSelfPermission(ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     || checkSelfPermission(WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{CAMERA, WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
+                requestPermissions(new String[]{CAMERA, ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION,WRITE_EXTERNAL_STORAGE }, CAMERA_PERMISSION_REQUEST_CODE);
+
                 havePermission = false;
             }
         }
@@ -320,6 +334,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     @TargetApi(Build.VERSION_CODES.M)
+
+
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == CAMERA_PERMISSION_REQUEST_CODE && grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
@@ -340,7 +356,7 @@ public class MainActivity extends AppCompatActivity
         builder.setCancelable(false);
         builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id){
-                requestPermissions(new String[]{CAMERA, WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
+                requestPermissions(new String[]{CAMERA, ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION,WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION_REQUEST_CODE);
             }
         });
         builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
